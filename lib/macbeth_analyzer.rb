@@ -6,7 +6,7 @@ class MacbethAnalyzer
 
 	def initialize(play_url)
 	  self.ignored_speakers = %w(ALL)
-          self.result = {}		
+		self.result = {}
 	  xml = open(play_url)
 	  self.play_xml = Nokogiri::XML(xml)	  
 	end
@@ -15,13 +15,12 @@ class MacbethAnalyzer
 		play_xml.search('SPEECH').each do |speech|
 	   
 	    speaker = speech.search('SPEAKER').text
-	    unless ignored_speakers.include? speaker  
-
+	    unless ignored_speakers.include? speaker
 	      dialogs = speech.search('LINE').count
 	      if result[speaker].nil?
-		 result[speaker] = dialogs
+		 			result[speaker] = dialogs
 	      else
-		 result[speaker] += dialogs
+		 			result[speaker] += dialogs
 	      end
 	    end 
 	  end	  
@@ -30,8 +29,13 @@ class MacbethAnalyzer
 
 	def show_result(output_stream = STDOUT)
 		result.each do |speaker, dialogs|
-			 output_stream.puts "#{dialogs} #{speaker}"
+			output_stream.puts "#{dialogs} #{speaker}"
 		end
 	end
+end
 
+if ENV['RUBY_ENV'] != 'TEST'
+  analyzer = MacbethAnalyzer.new('http://www.ibiblio.org/xml/examples/shakespeare/macbeth.xml')
+  analyzer.run
+	analyzer.show_result
 end
