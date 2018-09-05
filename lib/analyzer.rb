@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'nokogiri'
 
-class MacbethAnalyzer
+class Analyzer
 	attr_accessor :play_xml, :result, :ignored_speakers
 
 	def initialize(play_url)
@@ -32,10 +32,4 @@ class MacbethAnalyzer
 			output_stream.puts "#{dialogs} #{speaker}"
 		end
 	end
-end
-
-if ENV['RUBY_ENV'] != 'TEST'
-  analyzer = MacbethAnalyzer.new('http://www.ibiblio.org/xml/examples/shakespeare/macbeth.xml')
-  analyzer.run
-	analyzer.show_result
 end

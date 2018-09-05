@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 require 'pry'
 
-describe MacbethAnalyzer do
+describe Analyzer do
 
   let(:speaker_1) { "ALL" }
   let(:speaker_2) { "JON" }
@@ -20,10 +20,10 @@ describe MacbethAnalyzer do
   end
 
   before(:each) do
-    allow_any_instance_of(MacbethAnalyzer).to receive(:open).and_return(play_raw_xml)
+    allow_any_instance_of(Analyzer).to receive(:open).and_return(play_raw_xml)
   end
 
-  subject {  MacbethAnalyzer.new('') }
+  subject {  Analyzer.new('') }
 
   describe 'Attributes' do
     it { should respond_to :play_xml }
