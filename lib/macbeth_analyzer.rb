@@ -2,19 +2,20 @@ require 'open-uri'
 require 'nokogiri'
 
 class MacbethAnalyzer
-	attr_accessor :play_xml, :result
+	attr_accessor :play_xml, :result, :ignored_speakers
 
 	def initialize(play_url)
+	  self.ignored_speakers = %w(ALL)
           self.result = {}		
 	  xml = open(play_url)
 	  self.play_xml = Nokogiri::XML(xml)	  
 	end
 
-	def run 
-          play_xml.search('SPEECH').each do |speech|
+	def run
+		play_xml.search('SPEECH').each do |speech|
 	   
 	    speaker = speech.search('SPEAKER').text
-	    if speaker !=  'ALL' 
+	    unless ignored_speakers.include? speaker  
 
 	      dialogs = speech.search('LINE').count
 	      if result[speaker].nil?
@@ -24,15 +25,13 @@ class MacbethAnalyzer
 	      end
 	    end 
 	  end	  
-	  show_result  
+	  result  
 	end
 
-	def show_result 
+	def show_result(output_stream = STDOUT)
 		result.each do |speaker, dialogs|
-			 p "#{dialogs} #{speaker}"
+			 output_stream.puts "#{dialogs} #{speaker}"
 		end
 	end
 
 end
-
-MacbethAnalyzer.new('http://www.ibiblio.org/xml/examples/shakespeare/macbeth.xml').run
